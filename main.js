@@ -1,32 +1,52 @@
 import * as THREE from 'three';
 
-//setting the scene
+//Scene and Cemera
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+camera.position.z = 5;
 
-//setting the renderer
+//Renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
+// ============================================== //
+
+
 
 //cube object
-const geometry = new THREE.BoxGeometry( 3, 3, 3 );
-const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
+const faceColours = [0xff0000, 0xff5733, 0xffffff, 0xffff00, 0x00ff00, 0x0000ff];
+const materials = faceColours.map(color => new THREE.MeshBasicMaterial({ color }));
 
-//new object
-const cube2 = new THREE.Mesh( geometry, material );
-cube2.position.x = 1;
-cube2.position.y = 1;
-cube2.position.z = 1; 
-scene.add( cube2 );
+// Function to create a single cube with specified colors
+const createColoredCube = (x, y, z, materials) => {
+	const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+	const cubeMaterials = [
+	  materials[0], // Right
+	  materials[1], // Left
+	  materials[2], // Top
+	  materials[3], // Bottom
+	  materials[4], // Front
+	  materials[5]  // Back
+	];
+	const cube = new THREE.Mesh(cubeGeometry, cubeMaterials);
+	cube.position.set(x, y, z);
+	return cube;
+  };
 
-const cube3 = new THREE.Mesh( geometry, material );
-cube3.position.x = -1;
-cube3.position.y = -1;
-cube3.position.z = -1;
-scene.add( cube3 );
+
+// Create a 3x3x3 grid of cubes
+const cubeSize = 3;
+for (let x = 0; x < cubeSize; x++) {
+  for (let y = 0; y < cubeSize; y++) {
+    for (let z = 0; z < cubeSize; z++) {
+      const offsetX = (x - Math.floor(cubeSize / 2)) * 1.05; // Adjust spacing
+      const offsetY = (y - Math.floor(cubeSize / 2)) * 1.05;
+      const offsetZ = (z - Math.floor(cubeSize / 2)) * 1.05;
+      const cube = createColoredCube(offsetX, offsetY, offsetZ, materials);
+      scene.add(cube);
+    }
+  }
+}
 
 
 camera.position.z = 5;
@@ -35,14 +55,8 @@ camera.position.z = 5;
 function animate() {
 	requestAnimationFrame( animate );
 
-	cube.rotation.x += 0.01;
-	cube.rotation.y += 0.01;
-
-	cube2.rotation.x += 0.01;
-	cube2.rotation.y += 0.01;
-
-	cube3.rotation.x += 0.01;
-	cube3.rotation.y += 0.01;
+	scene.rotation.x += 0.001;
+	scene.rotation.y += 0.001;
 
 	renderer.render( scene, camera );
 }
