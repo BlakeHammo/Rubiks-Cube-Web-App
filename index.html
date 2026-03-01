@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Rubik's Cube</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #1a1a1a; overflow: hidden; }
+      canvas { display: block; }
+
+      #ui-overlay {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        color: #eeeeee;
+        font-family: monospace;
+        font-size: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        pointer-events: none;
+      }
+
+      #ui-overlay button {
+        pointer-events: all;
+        padding: 8px 18px;
+        cursor: pointer;
+        background: #2a2a2a;
+        color: #eeeeee;
+        border: 1px solid #555;
+        font-family: monospace;
+        font-size: 14px;
+        border-radius: 5px;
+        width: 110px;
+      }
+
+      #ui-overlay button:hover {
+        background: #3a3a3a;
+        border-color: #888;
+      }
+
+      #hints {
+        position: fixed;
+        bottom: 16px;
+        left: 16px;
+        color: #666;
+        font-family: monospace;
+        font-size: 12px;
+        line-height: 1.6;
+        pointer-events: none;
+      }
+
+      #win-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.88);
+        color: #ffdd00;
+        padding: 36px 56px;
+        text-align: center;
+        border-radius: 14px;
+        font-family: monospace;
+        border: 1px solid #555;
+        display: none;
+      }
+
+      #win-message .win-title {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      #win-stats {
+        font-size: 18px;
+        color: #ccc;
+      }
+
+      /* ── Settings Modal ── */
+      #settings-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+      }
+
+      #settings-panel {
+        background: #222;
+        border: 1px solid #555;
+        border-radius: 12px;
+        padding: 28px 36px;
+        min-width: 300px;
+        font-family: monospace;
+        color: #eee;
+      }
+
+      .settings-title {
+        font-size: 17px;
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+
+      .settings-hint {
+        font-size: 11px;
+        color: #777;
+        margin-bottom: 20px;
+      }
+
+      .binding-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+
+      .move-label {
+        font-size: 13px;
+        color: #ccc;
+      }
+
+      .key-btn {
+        background: #333;
+        color: #fff;
+        border: 1px solid #555;
+        border-radius: 5px;
+        padding: 4px 0;
+        width: 44px;
+        font-family: monospace;
+        font-size: 14px;
+        cursor: pointer;
+        text-align: center;
+      }
+
+      .key-btn:hover { background: #444; }
+
+      .key-btn.listening {
+        border-color: #ffdd00;
+        color: #ffdd00;
+        background: #2a2a1a;
+      }
+
+      .settings-footer {
+        font-size: 11px;
+        color: #666;
+        margin: 14px 0 0;
+        padding-top: 14px;
+        border-top: 1px solid #333;
+      }
+
+      .settings-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 14px;
+      }
+
+      .settings-actions button {
+        padding: 6px 14px;
+        cursor: pointer;
+        background: #2a2a2a;
+        color: #eee;
+        border: 1px solid #555;
+        font-family: monospace;
+        font-size: 13px;
+        border-radius: 5px;
+      }
+
+      .settings-actions button:hover { background: #3a3a3a; }
+    </style>
+    <script type="module" crossorigin src="/Rubiks-Cube-Web-App/assets/index-5MszPxDm.js"></script>
+  </head>
+  <body>
+    <div id="ui-overlay">
+      <div id="move-counter">Moves: 0</div>
+      <div id="timer">Time: 0.0s</div>
+      <div id="front-face">Front: Green</div>
+      <button id="scramble-btn">Scramble</button>
+      <button id="reset-btn">Reset</button>
+      <button id="settings-btn">Key Bindings</button>
+    </div>
+
+    <div id="settings-modal">
+      <div id="settings-panel">
+        <div class="settings-title">Key Bindings</div>
+        <div class="settings-hint">Click a key button · press new key to rebind · Esc to cancel</div>
+        <div id="bindings-list"></div>
+        <div class="settings-footer">
+          Shift + key = inverse move
+        </div>
+        <div class="settings-actions">
+          <button id="bindings-reset">Reset Defaults</button>
+          <button id="settings-close">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="hints">
+      Drag to rotate camera<br>
+      Click a face to set it as Front<br>
+      U D L R F B keys · Shift = inverse
+    </div>
+
+    <div id="win-message">
+      <div class="win-title">Solved!</div>
+      <div id="win-stats"></div>
+    </div>
+
+  </body>
+</html>
