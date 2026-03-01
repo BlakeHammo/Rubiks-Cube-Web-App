@@ -44,4 +44,4 @@ Press `o + Enter` to open the app in your browser, or navigate to the local URL 
 
 ## Preview
 
-![RubiksCube](https://github.com/BlakeHammo/Rubiks-Cube-Web-App/assets/114743774/0ec43aa1-56b2-45b2-9973-9a2f474cc961)
+<img width="1607" height="943" alt="Image" src="https://github.com/user-attachments/assets/0feaab16-6424-4d96-99ee-181d593c9d11" />
