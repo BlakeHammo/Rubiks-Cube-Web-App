@@ -6,9 +6,8 @@ let timerRunning = false;
 
 // ─── Setup ───────────────────────────────────────────────────────────────────
 
-export function setupUI(onScramble, onReset) {
+export function setupUI(onScramble) {
   document.getElementById('scramble-btn').addEventListener('click', onScramble);
-  document.getElementById('reset-btn').addEventListener('click', onReset);
 }
 
 // ─── Move Counter ─────────────────────────────────────────────────────────────

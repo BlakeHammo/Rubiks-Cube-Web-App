@@ -127,24 +127,14 @@ const orbitControls = setupControls(
 
 setupSettings();
 
-setupUI(
-  // Scramble
-  () => {
-    if (isMoving()) return;
-    solved = false;
-    moveQueue.length = 0;
-    resetUI();
-    scrambleCube(scene, () => {});
-  },
-  // Reset
-  () => {
-    if (isMoving()) return;
-    solved = false;
-    moveQueue.length = 0;
-    resetUI();
-    resetCube(scene);
-  }
-);
+setupUI(() => {
+  if (isMoving()) return;
+  solved = false;
+  moveQueue.length = 0;
+  resetUI();
+  resetCube(scene);
+  scrambleCube(scene, () => {});
+});
 
 // ─── Resize ───────────────────────────────────────────────────────────────────
 
