@@ -76,13 +76,15 @@ function onFaceSelect(frontDir) {
 // ─── State ────────────────────────────────────────────────────────────────────
 
 let solved = false;
+const moveQueue = [];
 
 // ─── Move Handler ─────────────────────────────────────────────────────────────
 
-function handleMove(moveName) {
-  if (solved) return;
-  if (isMoving()) return;
+const DURATION_NORMAL = 200;
+const DURATION_FAST   = 80;
 
+function doExecuteMove(moveName) {
+  const duration = moveQueue.length > 0 ? DURATION_FAST : DURATION_NORMAL;
   executeMove(moveName, scene, () => {
     if (!isTimerRunning()) startTimer();
     incrementMoveCount();
@@ -90,12 +92,29 @@ function handleMove(moveName) {
     if (isSolved()) {
       stopTimer();
       solved = true;
+      moveQueue.length = 0;
       showWinMessage(
         document.getElementById('move-counter').textContent.replace('Moves: ', ''),
         getElapsedSeconds()
       );
+      return;
     }
-  });
+
+    if (moveQueue.length > 0) {
+      doExecuteMove(moveQueue.shift());
+    }
+  }, duration);
+}
+
+function handleMove(moveName) {
+  if (solved) return;
+
+  if (isMoving()) {
+    moveQueue.push(moveName);
+    return;
+  }
+
+  doExecuteMove(moveName);
 }
 
 // ─── Controls ─────────────────────────────────────────────────────────────────
@@ -113,6 +132,7 @@ setupUI(
   () => {
     if (isMoving()) return;
     solved = false;
+    moveQueue.length = 0;
     resetUI();
     scrambleCube(scene, () => {});
   },
@@ -120,6 +140,7 @@ setupUI(
   () => {
     if (isMoving()) return;
     solved = false;
+    moveQueue.length = 0;
     resetUI();
     resetCube(scene);
   }
