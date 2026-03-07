@@ -20,7 +20,7 @@ scene.background = new THREE.Color(0x1a1a1a);
 const camera = new THREE.PerspectiveCamera(
   45, window.innerWidth / window.innerHeight, 0.1, 1000
 );
-camera.position.set(4, 3, 5);
+camera.position.set(7, 5, 9);
 camera.lookAt(0, 0, 0);
 
 // ─── Renderer ─────────────────────────────────────────────────────────────────
@@ -125,7 +125,7 @@ const orbitControls = setupControls(
 
 // ─── Camera Controls ──────────────────────────────────────────────────────────
 
-const DEFAULT_CAMERA_POS = new THREE.Vector3(4, 3, 5);
+const DEFAULT_CAMERA_POS = new THREE.Vector3(7, 5, 9);
 let fixedCameraMode = false;
 
 document.getElementById('camera-mode-btn').addEventListener('click', () => {

@@ -98,7 +98,7 @@ export function setupControls(camera, renderer, getCubeletsFn, onMove, onFaceSel
   orbitControls.enableDamping = true;
   orbitControls.dampingFactor = 0.08;
   orbitControls.minDistance = 4;
-  orbitControls.maxDistance = 12;
+  orbitControls.maxDistance = 18;
 
   // Default orientation: green face (+Z) is front
   const defaultFront = new THREE.Vector3(0, 0, 1);
