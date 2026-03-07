@@ -146,6 +146,35 @@ export function executeMove(moveName, scene, onComplete, duration = 200) {
   return true;
 }
 
+export function rotateCube(axis, direction, scene, onComplete, duration = 200) {
+  if (isAnimating) return false;
+  isAnimating = true;
+
+  const pivot = new THREE.Group();
+  scene.add(pivot);
+  cubelets.forEach(c => pivot.attach(c));
+
+  const TARGET_ANGLE = (Math.PI / 2) * direction;
+  const startTime = performance.now();
+
+  function animateStep(now) {
+    const elapsed = now - startTime;
+    const t = Math.min(elapsed / duration, 1);
+    const eased = t * t * (3 - 2 * t);
+    pivot.rotation[axis] = TARGET_ANGLE * eased;
+
+    if (t < 1) {
+      requestAnimationFrame(animateStep);
+    } else {
+      pivot.rotation[axis] = TARGET_ANGLE;
+      finishMove(pivot, cubelets, scene, onComplete);
+    }
+  }
+
+  requestAnimationFrame(animateStep);
+  return true;
+}
+
 export function isMoving() {
   return isAnimating;
 }

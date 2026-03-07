@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {
   createCube, getCubelets, executeMove, isSolved,
-  resetCube, scrambleCube, isMoving,
+  resetCube, scrambleCube, isMoving, rotateCube,
 } from './cube.js';
 import { setupControls, FACE_NAMES, FACE_COLORS } from './controls.js';
 import {
@@ -122,6 +122,34 @@ function handleMove(moveName) {
 const orbitControls = setupControls(
   camera, renderer, getCubelets, handleMove, onFaceSelect
 );
+
+// ─── Camera Controls ──────────────────────────────────────────────────────────
+
+const DEFAULT_CAMERA_POS = new THREE.Vector3(4, 3, 5);
+let fixedCameraMode = false;
+
+document.getElementById('camera-mode-btn').addEventListener('click', () => {
+  fixedCameraMode = !fixedCameraMode;
+  orbitControls.enabled = !fixedCameraMode;
+  document.getElementById('camera-mode-btn').textContent =
+    fixedCameraMode ? 'Free Camera' : 'Fixed Camera';
+});
+
+document.getElementById('reset-camera-btn').addEventListener('click', () => {
+  camera.position.copy(DEFAULT_CAMERA_POS);
+  camera.lookAt(0, 0, 0);
+  orbitControls.update();
+});
+
+// Arrow keys rotate the whole cube (same visual effect as rotating the camera)
+// Left/Right → Y axis, Up/Down → X axis
+window.addEventListener('keydown', (e) => {
+  if (!fixedCameraMode) return;
+  if (e.key === 'ArrowLeft')  { e.preventDefault(); rotateCube('y',  1, scene); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); rotateCube('y', -1, scene); }
+  if (e.key === 'ArrowUp')    { e.preventDefault(); rotateCube('x',  1, scene); }
+  if (e.key === 'ArrowDown')  { e.preventDefault(); rotateCube('x', -1, scene); }
+});
 
 // ─── UI ───────────────────────────────────────────────────────────────────────
 
