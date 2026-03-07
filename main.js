@@ -142,13 +142,18 @@ document.getElementById('reset-camera-btn').addEventListener('click', () => {
   orbitControls.update();
 });
 
+// After a whole-cube rotation, drain any moves that were queued during the animation
+function onRotateDone() {
+  if (moveQueue.length > 0) doExecuteMove(moveQueue.shift());
+}
+
 // Arrow keys (or rebound keys) rotate the whole cube in fixed camera mode
 window.addEventListener('keydown', (e) => {
   if (!fixedCameraMode) return;
-  if (e.key === getKeyForMove('RotateLeft'))  { e.preventDefault(); rotateCube('y',  1, scene); }
-  if (e.key === getKeyForMove('RotateRight')) { e.preventDefault(); rotateCube('y', -1, scene); }
-  if (e.key === getKeyForMove('RotateUp'))    { e.preventDefault(); rotateCube('x',  1, scene); }
-  if (e.key === getKeyForMove('RotateDown'))  { e.preventDefault(); rotateCube('x', -1, scene); }
+  if (e.key === getKeyForMove('RotateLeft'))  { e.preventDefault(); rotateCube('y',  1, scene, onRotateDone); }
+  if (e.key === getKeyForMove('RotateRight')) { e.preventDefault(); rotateCube('y', -1, scene, onRotateDone); }
+  if (e.key === getKeyForMove('RotateUp'))    { e.preventDefault(); rotateCube('x',  1, scene, onRotateDone); }
+  if (e.key === getKeyForMove('RotateDown'))  { e.preventDefault(); rotateCube('x', -1, scene, onRotateDone); }
 });
 
 // ─── UI ───────────────────────────────────────────────────────────────────────
