@@ -9,6 +9,7 @@ import {
   isTimerRunning, getElapsedSeconds, showWinMessage, resetUI, setFrontFace,
 } from './ui.js';
 import { setupSettings } from './settings.js';
+import { getKeyForMove } from './keybindings.js';
 
 // ─── Scene ────────────────────────────────────────────────────────────────────
 
@@ -141,14 +142,13 @@ document.getElementById('reset-camera-btn').addEventListener('click', () => {
   orbitControls.update();
 });
 
-// Arrow keys rotate the whole cube (same visual effect as rotating the camera)
-// Left/Right → Y axis, Up/Down → X axis
+// Arrow keys (or rebound keys) rotate the whole cube in fixed camera mode
 window.addEventListener('keydown', (e) => {
   if (!fixedCameraMode) return;
-  if (e.key === 'ArrowLeft')  { e.preventDefault(); rotateCube('y',  1, scene); }
-  if (e.key === 'ArrowRight') { e.preventDefault(); rotateCube('y', -1, scene); }
-  if (e.key === 'ArrowUp')    { e.preventDefault(); rotateCube('x',  1, scene); }
-  if (e.key === 'ArrowDown')  { e.preventDefault(); rotateCube('x', -1, scene); }
+  if (e.key === getKeyForMove('RotateLeft'))  { e.preventDefault(); rotateCube('y',  1, scene); }
+  if (e.key === getKeyForMove('RotateRight')) { e.preventDefault(); rotateCube('y', -1, scene); }
+  if (e.key === getKeyForMove('RotateUp'))    { e.preventDefault(); rotateCube('x',  1, scene); }
+  if (e.key === getKeyForMove('RotateDown'))  { e.preventDefault(); rotateCube('x', -1, scene); }
 });
 
 // ─── UI ───────────────────────────────────────────────────────────────────────

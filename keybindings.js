@@ -7,6 +7,10 @@ export const DEFAULT_BINDINGS = {
   'R': 'r',
   'F': 'f',
   'B': 'b',
+  'RotateLeft':  'ArrowLeft',
+  'RotateRight': 'ArrowRight',
+  'RotateUp':    'ArrowUp',
+  'RotateDown':  'ArrowDown',
 };
 
 function loadBindings() {
@@ -14,9 +18,9 @@ function loadBindings() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      // Validate: all 6 standard moves present, each a single character
+      // Validate: all moves present, each a non-empty string
       const valid = Object.keys(DEFAULT_BINDINGS).every(
-        k => typeof parsed[k] === 'string' && parsed[k].length === 1
+        k => typeof parsed[k] === 'string' && parsed[k].length >= 1
       );
       if (valid) return { ...DEFAULT_BINDINGS, ...parsed };
     }
@@ -30,7 +34,7 @@ function save() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(bindings)); } catch { /* ignore */ }
 }
 
-// Returns the key character currently bound to a move name ('U', 'D', etc.)
+// Returns the key currently bound to a move name ('U', 'RotateLeft', etc.)
 export function getKeyForMove(moveName) {
   return bindings[moveName] ?? moveName.toLowerCase();
 }

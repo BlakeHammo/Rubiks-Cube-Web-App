@@ -7,7 +7,26 @@ const MOVE_LABELS = {
   'R': 'R  ·  Right layer',
   'F': 'F  ·  Front face',
   'B': 'B  ·  Back face',
+  'RotateLeft':  'Rotate left',
+  'RotateRight': 'Rotate right',
+  'RotateUp':    'Rotate up',
+  'RotateDown':  'Rotate down',
 };
+
+const KEY_DISPLAY = {
+  'ArrowLeft':  '←',
+  'ArrowRight': '→',
+  'ArrowUp':    '↑',
+  'ArrowDown':  '↓',
+};
+
+function displayKey(key) {
+  return KEY_DISPLAY[key] ?? key.toUpperCase();
+}
+
+const CUBE_MOVES   = ['U', 'D', 'L', 'R', 'F', 'B'];
+const CAMERA_MOVES = ['RotateLeft', 'RotateRight', 'RotateUp', 'RotateDown'];
+const ALLOWED_SPECIAL = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']);
 
 let awaitingKeyFor = null; // move name currently waiting to be rebound
 
@@ -57,10 +76,12 @@ function onRebindKeyDown(e) {
     return;
   }
 
-  // Only accept single printable characters (letters, numbers, symbols)
-  if (e.key.length !== 1) return;
+  // Accept single printable characters or allowed special keys (arrows)
+  if (e.key.length !== 1 && !ALLOWED_SPECIAL.has(e.key)) return;
 
-  setKeyForMove(awaitingKeyFor, e.key.toLowerCase());
+  // Store multi-char keys as-is; lowercase single chars
+  const storeKey = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  setKeyForMove(awaitingKeyFor, storeKey);
   awaitingKeyFor = null;
   renderBindings();
 }
@@ -77,7 +98,18 @@ function renderBindings() {
   const list = document.getElementById('bindings-list');
   list.innerHTML = '';
 
-  for (const [move, key] of Object.entries(bindings)) {
+  renderSection(list, 'Cube Moves', CUBE_MOVES, bindings);
+  renderSection(list, 'Camera Controls', CAMERA_MOVES, bindings);
+}
+
+function renderSection(list, title, moves, bindings) {
+  const header = document.createElement('div');
+  header.className = 'settings-section';
+  header.textContent = title;
+  list.appendChild(header);
+
+  for (const move of moves) {
+    const key = bindings[move];
     const row = document.createElement('div');
     row.className = 'binding-row';
 
@@ -87,7 +119,7 @@ function renderBindings() {
 
     const btn = document.createElement('button');
     btn.className = 'key-btn' + (awaitingKeyFor === move ? ' listening' : '');
-    btn.textContent = awaitingKeyFor === move ? '...' : key;
+    btn.textContent = awaitingKeyFor === move ? '...' : displayKey(key);
     btn.title = 'Click to rebind';
     btn.addEventListener('click', () => startRebind(move));
 
