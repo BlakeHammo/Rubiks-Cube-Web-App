@@ -2,12 +2,12 @@ import * as THREE from 'three';
 
 // Standard Rubik's cube colors
 const COLORS = {
-  RED:    0xcc0000,   // Right  (+X)
-  ORANGE: 0xff6000,   // Left   (-X)
+  RED:    0x00aa00,   // Right  (+X)
+  ORANGE: 0x0000cc,   // Left   (-X)
   YELLOW: 0xffdd00,   // Top    (+Y)
   WHITE:  0xffffff,   // Bottom (-Y)
-  GREEN:  0x00aa00,   // Front  (+Z)
-  BLUE:   0x0000cc,   // Back   (-Z)
+  GREEN:  0xcc0000,   // Front  (+Z)
+  BLUE:   0xff6000,   // Back   (-Z)
   BLACK:  0x111111,   // Inner faces
 };
 
